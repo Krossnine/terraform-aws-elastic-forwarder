@@ -1,0 +1,16 @@
+branch: main
+download-external-modules: false
+evaluate-variables: true
+framework:
+  - terraform
+  - github_configuration
+  - github_actions
+  - serverless
+skip-check:
+  - CKV_AWS_116
+  - CKV_AWS_117
+  - CKV_AWS_272
+  - CKV_AWS_173
+output:
+  - cli
+summary-position: bottom
