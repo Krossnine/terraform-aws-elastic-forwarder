@@ -1,3 +1,7 @@
+# Custom
+
+.terraform.lock.hcl
+
 # Created by https://www.toptal.com/developers/gitignore/api/node,linux,macos,windows,jetbrains,terraform,sam+config,visualstudio,jetbrains+all,jetbrains+iml,visualstudiocode
 # Edit at https://www.toptal.com/developers/gitignore?templates=node,linux,macos,windows,jetbrains,terraform,sam+config,visualstudio,jetbrains+all,jetbrains+iml,visualstudiocode
 
