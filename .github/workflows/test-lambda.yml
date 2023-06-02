@@ -1,0 +1,89 @@
+name: Test Lambda
+
+on:
+  workflow_call:
+
+jobs:
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [18.x, 20.x] # Current and Anticipated versions of Node.js
+    steps:
+    - name: Check out code
+      uses: actions/checkout@v3
+
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ matrix.node-version }}
+
+    - name: Install dependencies
+      run: npm install
+      working-directory: ./lambda/src
+
+    - name: Lint
+      run: npm run lint
+      working-directory: ./lambda/src
+
+  unit-test:
+    name: Unit Test Lambda
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [18.x, 20.x] # Current and Anticipated versions of Node.js
+    steps:
+    - name: Check out code
+      uses: actions/checkout@v3
+
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ matrix.node-version }}
+
+    - name: Install dependencies
+      run: npm install
+      working-directory: ./lambda/src
+
+    - name: Unit Test
+      run: npm run unit
+      working-directory: ./lambda/src
+
+    - name: Upload Code coverage
+      uses: codecov/codecov-action@v3
+      with:
+        files: ./lambda/src/coverage/clover.xml
+
+    - name: Security Scan
+      uses: snyk/actions/node@master
+      env:
+        SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+      with:
+        args: --all-projects --sarif-file-output=snyk.sarif
+
+    - name: Upload Snyk SARIF file
+      uses: github/codeql-action/upload-sarif@v1
+      with:
+        sarif_file: snyk.sarif
+
+  ts-check:
+    name: Typescript check Lambda
+    runs-on: ubuntu-latest
+    steps:
+    - name: Check out code
+      uses: actions/checkout@v3
+
+    - name: Use Node.js 18.x
+      uses: actions/setup-node@v3
+      with:
+        node-version: 18.x
+
+    - name: Install dependencies
+      run: npm install
+      working-directory: ./lambda/src
+
+    - name: Typescript Test
+      run: npm run ts-check
+      working-directory: ./lambda/src
+

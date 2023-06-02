@@ -1,0 +1,120 @@
+name: Test
+
+on:
+  workflow_call:
+
+jobs:
+  validate:
+    name: Validate
+    runs-on: ubuntu-latest
+    steps:
+    - name: Check out code
+      uses: actions/checkout@v3
+
+    - name: Init
+      uses: docker://hashicorp/terraform
+      with:
+        entrypoint: terraform
+        args: init
+
+    - name: Validate
+      uses: docker://hashicorp/terraform
+      with:
+        entrypoint: terraform
+        args: validate
+
+  format:
+    name: Format
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Format
+      uses: docker://hashicorp/terraform
+      with:
+        entrypoint: terraform
+        args: fmt -check=true -diff=true -recursive
+
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Cache plugin dir
+      uses: actions/cache@v3
+      with:
+        path: ~/.tflint.d/plugins
+        key: ubuntu-latest-tflint-${{ hashFiles('.tflint.hcl') }}
+
+    - name: Setup TFLint
+      uses: terraform-linters/setup-tflint@v3
+      with:
+        tflint_version: latest
+
+    - name: Init TFLint
+      run: tflint --init
+      env:
+        GITHUB_TOKEN: ${{ github.token }}
+
+    - name: Run TFLint
+      run: tflint -f sarif --minimum-failure-severity=warning
+
+  tfsec:
+    name: Tfsec
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: tfsec
+      uses: aquasecurity/tfsec-pr-commenter-action@v1.2.0
+      with:
+        tfsec_args: --config-file .tfsec.yml
+        tfsec_formats: sarif
+        github_token: ${{ github.token }}
+
+  terrascan:
+    name: Terrascan
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: scan
+      uses: tenable/terrascan-action@main
+      with:
+        iac_type: 'terraform'
+        policy_type: 'aws'
+        only_warn: true
+        sarif_upload: true
+        github_token: ${{ github.token }}
+
+    - name: Upload SARIF file
+      uses: github/codeql-action/upload-sarif@v1
+      with:
+        sarif_file: terrascan.sarif
+
+  checkov:
+    permissions:
+      contents: read
+      security-events: write
+    name: Checkov
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: scan
+      uses: bridgecrewio/checkov-action@v12
+      with:
+        config_file: .checkov.yml
+        output_format: cli,sarif
+        output_file_path: console,results.sarif
+
+    - name: Upload SARIF file
+      uses: github/codeql-action/upload-sarif@v1
+      with:
+        sarif_file: terrascan.sarif

@@ -1,0 +1,36 @@
+name: Test
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  call-terraform-test-workflow:
+    name: Test Terraform
+    uses: ./test-tf.yml
+
+  call-lambda-test-workflow:
+    name: Test Lambda
+    uses: ./test-lambda.yml
+
+  call-lambda-build-workflow:
+    name: Build Lambda
+    uses: ./build-lambda.yml
+
+  update-module-docs:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        ref: ${{ github.event.pull_request.head.ref }}
+
+    - name: Render terraform docs inside the README.md and push changes back to PR branch
+      uses: terraform-docs/gh-actions@v1.0.0
+      with:
+        working-dir: .
+        output-file: README.md
+        output-method: inject
+        git-push: "true"
+        config-file: .terraform-docs.yml
+        git-commit-message: "doc(module): update module documentation [skip ci]"
