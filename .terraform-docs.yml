@@ -18,7 +18,8 @@ output:
     <!-- END_TF_DOCS -->
 
 output-values:
-  enabled: true
+  enabled: false
+  from: ""
 
 sort:
   enabled: true
