@@ -76,27 +76,6 @@ jobs:
         tfsec_formats: sarif
         github_token: ${{ github.token }}
 
-  terrascan:
-    name: Terrascan
-    runs-on: ubuntu-latest
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v3
-
-    - name: scan
-      uses: tenable/terrascan-action@main
-      with:
-        iac_type: 'terraform'
-        policy_type: 'aws'
-        only_warn: true
-        sarif_upload: true
-        github_token: ${{ github.token }}
-
-    - name: Upload SARIF file
-      uses: github/codeql-action/upload-sarif@v1
-      with:
-        sarif_file: terrascan.sarif
-
   checkov:
     permissions:
       contents: read
