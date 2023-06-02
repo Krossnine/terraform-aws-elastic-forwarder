@@ -10,7 +10,7 @@ repos:
         - --args=--config-file=__GIT_WORKING_DIR__/.tfsec.json
     - id: terraform_docs
       args:
-        - --args=--config=__GIT_WORKING_DIR__/.terraform-docs.yml
+        - --args=--config=.terraform-docs.yml
     - id: terraform_checkov
       args:
         - --args=--config-file __GIT_WORKING_DIR__/.checkov.yml
