@@ -58,6 +58,6 @@ No modules.
 
 | Name | Description |
 |------|-------------|
-| <a name="output_cloudwatch_subscriptions"></a> [cloudwatch\_subscriptions](#output\_cloudwatch\_subscriptions) | n/a |
-| <a name="output_log_forwarder_lambda_arn"></a> [log\_forwarder\_lambda\_arn](#output\_log\_forwarder\_lambda\_arn) | n/a |
+| <a name="output_cloudwatch_subscriptions"></a> [cloudwatch\_subscriptions](#output\_cloudwatch\_subscriptions) | The ARN of the cloudwatch subscription filters |
+| <a name="output_log_forwarder_lambda_arn"></a> [log\_forwarder\_lambda\_arn](#output\_log\_forwarder\_lambda\_arn) | The ARN of the Lambda function that forwards logs to CloudWatch |
 <!-- END_TF_DOCS -->
