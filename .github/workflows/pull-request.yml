@@ -1,4 +1,4 @@
-name: Test
+name: Pull Request
 
 on:
   pull_request:
@@ -8,15 +8,15 @@ on:
 jobs:
   call-terraform-test-workflow:
     name: Test Terraform
-    uses: ./test-tf.yml
+    uses: ./.github/actions/test-tf.yml
 
   call-lambda-test-workflow:
     name: Test Lambda
-    uses: ./test-lambda.yml
+    uses: ./.github/actions/test-lambda.yml
 
   call-lambda-build-workflow:
     name: Build Lambda
-    uses: ./build-lambda.yml
+    uses: ./.github/actions/build-lambda.yml
 
   update-module-docs:
     runs-on: ubuntu-latest
