@@ -3,6 +3,8 @@ name: Test Lambda
 on:
   workflow_call:
 
+permissions: read-all
+
 jobs:
   lint:
     name: Lint
@@ -54,18 +56,6 @@ jobs:
       uses: codecov/codecov-action@v3
       with:
         files: ./lambda/src/coverage/clover.xml
-
-    - name: Security Scan
-      uses: snyk/actions/node@master
-      env:
-        SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
-      with:
-        args: --all-projects --sarif-file-output=snyk.sarif
-
-    - name: Upload Snyk SARIF file
-      uses: github/codeql-action/upload-sarif@v1
-      with:
-        sarif_file: snyk.sarif
 
   ts-check:
     name: Typescript check Lambda

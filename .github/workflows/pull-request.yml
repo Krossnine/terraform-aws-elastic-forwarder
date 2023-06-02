@@ -5,20 +5,52 @@ on:
     branches:
       - main
 
+permissions: read-all
+
 jobs:
   call-terraform-test-workflow:
+    permissions:
+      actions: read
+      checks: read
+      contents: read
+      deployments: read
+      discussions: read
+      issues: read
+      id-token: write
+      packages: read
+      pages: read
+      pull-requests: read
+      repository-projects: read
+      security-events: write
+      statuses: read
     name: Test Terraform
-    uses: ./.github/actions/test-tf.yml
+    uses: ./.github/workflows/test-tf.yml
 
   call-lambda-test-workflow:
     name: Test Lambda
-    uses: ./.github/actions/test-lambda.yml
+    uses: ./.github/workflows/test-lambda.yml
 
   call-lambda-build-workflow:
+    permissions:
+      actions: read
+      checks: read
+      contents: write
+      deployments: read
+      discussions: read
+      issues: read
+      id-token: write
+      packages: read
+      pages: read
+      pull-requests: read
+      repository-projects: read
+      security-events: write
+      statuses: read
     name: Build Lambda
-    uses: ./.github/actions/build-lambda.yml
+    uses: ./.github/workflows/build-lambda.yml
 
   update-module-docs:
+    permissions:
+      contents: write
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
@@ -29,8 +61,6 @@ jobs:
       uses: terraform-docs/gh-actions@v1.0.0
       with:
         working-dir: .
-        output-file: README.md
-        output-method: inject
         git-push: "true"
         config-file: .terraform-docs.yml
         git-commit-message: "doc(module): update module documentation [skip ci]"
