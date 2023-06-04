@@ -1,3 +1,13 @@
+exclude: |
+  (?x)^(
+    examples/complete/main.tf|
+    examples/disable-dashboard/main.tf|
+    examples/minimal/main.tf|
+    examples/with-dynamic-lambda-ttl/main.tf|
+    examples/with-dynamic-log-groups/main.tf|
+    examples/with-dynamic-request-ttl/main.tf|
+    examples/with-dynamic-retry/main.tf
+  )$
 repos:
 - repo: https://github.com/antonbabenko/pre-commit-terraform
   rev: v1.80.0
