@@ -81,6 +81,9 @@ module "log_forwarder" {
   ]
 }
 ```
+## Dashboard preview :
+![dashboard-demo](https://github.com/Krossnine/terraform-aws-elastic-forwarder/assets/6457707/7aac49a7-5990-4218-a45f-ddc90ff4d6a3)
+
 
 
 <!-- BEGIN_TF_DOCS -->
