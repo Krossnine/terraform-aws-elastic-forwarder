@@ -67,6 +67,24 @@ To set up a development environment, please follow these steps:
     zip -r ../../../LogForwarderFunction.zip .
     ```
 
+5. Run pre-commit by hand :
+
+  - All hooks :
+    ```sh
+    pre-commit run --all-files
+    ```
+
+  - Specific hook :
+    ```sh
+    pre-commit run terraform_fmt
+    pre-commit run terraform_tflint
+    pre-commit run terraform_validate
+    pre-commit run terraform_tfsec
+    pre-commit run terraform_docs
+    pre-commit run terraform_checkov
+    ```
+
+
 ## Issues and feature requests
 
 You've found a bug in the source code, a mistake in the documentation or maybe you'd like a new feature? You can help us by [submitting an issue on GitHub](https://github.com/Krossnine/terraform-aws-elastic-forwarder/issues). Before you create an issue, make sure to search the issue archive -- your issue may have already been addressed!
