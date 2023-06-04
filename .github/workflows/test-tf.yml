@@ -26,6 +26,7 @@ jobs:
         args: validate
 
   format:
+    needs: validate
     name: Format
     runs-on: ubuntu-latest
     steps:
@@ -39,6 +40,7 @@ jobs:
         args: fmt -check=true -diff=true -recursive
 
   lint:
+    needs: format
     name: Lint
     runs-on: ubuntu-latest
     steps:
@@ -65,6 +67,10 @@ jobs:
       run: tflint -f sarif --minimum-failure-severity=warning
 
   tfsec:
+    needs:
+      - validate
+      - format
+      - lint
     name: Tfsec
     runs-on: ubuntu-latest
     steps:
@@ -79,6 +85,8 @@ jobs:
         github_token: ${{ github.token }}
 
   checkov:
+    needs:
+      - tfsec
     permissions:
       actions: read
       contents: read

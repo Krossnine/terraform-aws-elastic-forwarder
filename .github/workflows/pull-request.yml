@@ -31,6 +31,7 @@ jobs:
     uses: ./.github/workflows/test-lambda.yml
 
   call-lambda-build-workflow:
+    needs: call-lambda-test-workflow
     permissions:
       actions: read
       checks: read
@@ -49,6 +50,8 @@ jobs:
     uses: ./.github/workflows/build-lambda.yml
 
   update-module-docs:
+    needs:
+      - call-terraform-test-workflow
     permissions:
       contents: write
     runs-on: ubuntu-latest
