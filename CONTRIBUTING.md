@@ -84,6 +84,36 @@ To set up a development environment, please follow these steps:
     pre-commit run terraform_checkov
     ```
 
+6. Run CI/CD pipeline locally :
+
+You can test Github actions locally with Act. To do so, you need to have Docker installed on your machine and Act.
+
+  - Most common commands :
+    ```sh
+    act -l
+    act -P ubuntu-latest=nektos/act-environments-ubuntu:18.04
+    act pull_request
+    ```
+
+  - Run all jobs :
+    ```sh
+    act
+    ```
+
+  - Run specific workflow :
+    ```sh
+    act -W <workflow_name>
+    ```
+
+  - Run specific job :
+    ```sh
+    act -j <job_name>
+    ```
+
+  - Run specific job with specific event :
+    ```sh
+    act -j <job_name> -e <event_name>
+    ```
 
 ## Issues and feature requests
 
