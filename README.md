@@ -1,6 +1,87 @@
-# Terraform Aws Elastic Forwarder #
+# Terraform Aws Elastic Forwarder ![release](https://github.com/Krossnine/terraform-aws-elastic-forwarder/releases/latest) [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
-This Terraform module deploys a lambda function that forwards logs from CloudWatch to an ElasticSearch cluster.
+
+This Terraform module for provisioning a log forwarder for AWS CloudWatch Logs to ElasticSearch.
+
+Included features :
+- Automatically create Subscription for each CloudWatch Log Groups
+- CloudWatch dashboard for lambda monitoring
+- Multi region support
+- Passive and active filtering of log events at subscription and lambda level
+- Retry mechanism for failed log forward requests
+
+
+![test](https://github.com/Krossnine/terraform-aws-elastic-forwarder/actions/workflows/test-tf.yml/badge.svg)
+![test](https://github.com/Krossnine/terraform-aws-elastic-forwarder/actions/workflows/test-lambda.yml/badge.svg)
+![test](https://github.com/Krossnine/terraform-aws-elastic-forwarder/actions/workflows/build-lambda.yml/badge.svg)
+
+## Usage
+
+### Simple example:
+
+```hcl
+module "log_forwarder" {
+  source = "Krossnine/terraform-aws-elastic-forwarder"
+  # version = "x.x.x"
+
+  log_forwarder_lambda_region = var.region
+
+  elastic_search_url      = var.elastic_search_url
+  elastic_search_username = var.elastic_search_username
+  elastic_search_password = var.elastic_search_password
+  elastic_search_index    = var.elastic_search_index
+
+  cloudwatch_log_group_subscriptions = [
+    {
+      key  = aws_cloudwatch_log_group.log_group.name
+      arn   = aws_cloudwatch_log_group.log_group.arn
+      region = aws_cloudwatch_log_group.log_group.region
+    }
+  ]
+}
+```
+
+### Example with custom retry mechanism:
+
+```hcl
+module "log_forwarder" {
+  source = "Krossnine/terraform-aws-elastic-forwarder"
+  # version = "x.x.x"
+
+  # The number of retry after the initial request
+  elastic_search_retry_count = 4
+
+  # The request time limit for the ELK request in milliseconds
+  elastic_request_timeout_ms = 5000
+
+  # The lambda timeout in seconds
+  # eg:
+  #   - ttl = Elk request ttl (in sec) * (Retry count + initial request) + cold start (in sec)
+  #   - ttl = (elastic_request_timeout_ms / 1000) * (elastic_search_retry_count + 1) + 1
+  #   - ttl = (5000 / 1000) * (4 + 1) + 1
+  log_forwarder_lambda_ttl = 26
+}
+```
+
+### Example with custom log filtering:
+
+```hcl
+module "log_forwarder" {
+  source = "Krossnine/terraform-aws-elastic-forwarder"
+  # version = "x.x.x"
+
+  # Passive filtering at subscription level
+  cloudwatch_log_forward_filter_pattern = "{ $.errorCode >= 400 }"
+
+  # Active filtering at lambda level
+  elastic_allowed_log_fields = [
+    "message",
+    "log.level",
+    "my.nested.0.property"
+  ]
+}
+```
+
 
 <!-- BEGIN_TF_DOCS -->
 ## Requirements
@@ -37,7 +118,7 @@ No modules.
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
 | <a name="input_cloudwatch_log_forward_filter_pattern"></a> [cloudwatch\_log\_forward\_filter\_pattern](#input\_cloudwatch\_log\_forward\_filter\_pattern) | (Optional) Defines the CloudWatch Logs filter pattern used<br>    to subscribe to a filtered stream of log events.<br>    An empty string matches all events.<br>    See the CloudWatch Logs User Guide for more information. | `string` | `""` | no |
-| <a name="input_cloudwatch_log_group_subscriptions"></a> [cloudwatch\_log\_group\_subscriptions](#input\_cloudwatch\_log\_group\_subscriptions) | This variable is used to define a list of CloudWatch log groups<br>    with associated subscription filters. Each item in the list<br>    should include the ARN, ID, and name of a CloudWatch log group where a<br>    subscription filter will be added to send logs to the log forwarder<br>    Lambda function. | `list(map(string))` | `[]` | no |
+| <a name="input_cloudwatch_log_group_subscriptions"></a> [cloudwatch\_log\_group\_subscriptions](#input\_cloudwatch\_log\_group\_subscriptions) | This variable is used to define a list of CloudWatch log groups<br>    with associated subscription filters. Each item in the list<br>    should include the ARN, ID, and name of a CloudWatch log group where a<br>    subscription filter will be added to send logs to the log forwarder<br>    Lambda function. | `list(map(string))` | n/a | yes |
 | <a name="input_default_tags"></a> [default\_tags](#input\_default\_tags) | The default tags to apply to all resources | `map(string)` | `{}` | no |
 | <a name="input_elastic_allowed_log_fields"></a> [elastic\_allowed\_log\_fields](#input\_elastic\_allowed\_log\_fields) | The list of allowed log keys to forward to elastic search.<br>    If empty, all keys will be forwarded.<br>    This concern each keys in log events.<br>    To target specific nested properties in log events you can flatten them using the following syntax :<br>      - "key" to target the key property<br>      - "key.subkey" to target the subkey property<br><br>    Example: ["message", "log.level", "my.nested.0.property"] | `list(string)` | `[]` | no |
 | <a name="input_elastic_request_timeout_ms"></a> [elastic\_request\_timeout\_ms](#input\_elastic\_request\_timeout\_ms) | The request time limit for the ELK request in milliseconds.<br>    Be aware that this is not the lambda timeout,<br>    Your need to orchestrate each of this variables accordingly :<br>      - log\_forwarder\_lambda\_ttl<br>      - elastic\_request\_timeout\_ms<br>      - elastic\_search\_retry\_count<br><br>    You can use the following formula to calculate the request timeout :<br>      elastic\_request\_timeout\_ms = (log\_forwarder\_lambda\_ttl - 1) * 1000 / (elastic\_search\_retry\_count + 1)<br>    Where :<br>      - log\_forwarder\_lambda\_ttl is the lambda timeout in seconds minus 1 second for the cold start<br>      - elastic\_search\_retry\_count is the number of retry plus the initial request<br><br>    Do not forget to add a gap to the lambda ttl for the initialization and the initial request before retries. | `number` | `3000` | no |
