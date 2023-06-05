@@ -9,7 +9,7 @@ resource "aws_cloudwatch_log_subscription_filter" "log_forwarder" {
   destination_arn = aws_lambda_function.log_forwarder.arn
 
   depends_on = [
-    aws_lambda_function.log_forwarder
+    aws_lambda_permission.allow_cloudwatch_to_invoke[*]
   ]
 
   lifecycle {
