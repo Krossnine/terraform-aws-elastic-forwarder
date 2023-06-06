@@ -68,10 +68,11 @@ jobs:
 
   tfsec:
     needs:
-      - validate
-      - format
       - lint
     name: Tfsec
+    permissions:
+      contents: read
+      security-events: write
     runs-on: ubuntu-latest
     steps:
     - name: Checkout code
@@ -86,7 +87,7 @@ jobs:
 
   checkov:
     needs:
-      - tfsec
+      - lint
     permissions:
       actions: read
       contents: read

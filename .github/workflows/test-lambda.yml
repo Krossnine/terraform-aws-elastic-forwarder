@@ -1,4 +1,4 @@
-name: Test Lambda
+name: Test & Build Lambda
 
 on:
   workflow_call:
@@ -8,18 +8,15 @@ permissions: read-all
 jobs:
   lint:
     name: Lint
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        node-version: [18.x, 20.x] # Current and Anticipated versions of Node.js
+    runs-on: ubuntu-22.04
     steps:
     - name: Check out code
       uses: actions/checkout@v3
 
-    - name: Use Node.js ${{ matrix.node-version }}
+    - name: Use Node.js 18.x
       uses: actions/setup-node@v3
       with:
-        node-version: ${{ matrix.node-version }}
+        node-version: 18.x
 
     - name: Install dependencies
       run: npm install
@@ -31,18 +28,15 @@ jobs:
 
   unit-test:
     name: Unit Test Lambda
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        node-version: [18.x, 20.x] # Current and Anticipated versions of Node.js
+    runs-on: ubuntu-22.04
     steps:
     - name: Check out code
       uses: actions/checkout@v3
 
-    - name: Use Node.js ${{ matrix.node-version }}
+    - name: Use Node.js 18.x
       uses: actions/setup-node@v3
       with:
-        node-version: ${{ matrix.node-version }}
+        node-version: 18.x
 
     - name: Install dependencies
       run: npm install
@@ -58,8 +52,8 @@ jobs:
         files: ./lambda/src/coverage/clover.xml
 
   ts-check:
-    name: Typescript check Lambda
-    runs-on: ubuntu-latest
+    name: Typescript check Lambda transpilation
+    runs-on: ubuntu-22.04
     steps:
     - name: Check out code
       uses: actions/checkout@v3
@@ -77,3 +71,50 @@ jobs:
       run: npm run ts-check
       working-directory: ./lambda/src
 
+    - name: Compile typescript
+      run: npm run compile
+      working-directory: ./lambda/src
+
+  build-test:
+    permissions:
+      contents: write
+    name: Build lambda
+    runs-on: ubuntu-22.04
+    needs:
+      - lint
+      - unit-test
+      - ts-check
+    steps:
+    - name: Install ZIP
+      run: apt-get install -y zip
+
+    - name: Install AWS SAM CLI
+      uses: aws-actions/setup-sam@v2
+      with:
+        use-installer: true
+
+    - name: Check out code
+      uses: actions/checkout@v3
+      with:
+        ref: ${{ github.event.pull_request.head.ref }}
+
+    - name: Use Node.js 18.x
+      uses: actions/setup-node@v3
+      with:
+        node-version: 18.x
+
+    - name: Install dependencies
+      run: npm install
+      working-directory: ./lambda/src
+
+    - name: Typescript transpile
+      run: npm run compile
+      working-directory: ./lambda/src
+
+    - name: build lambda
+      run: sam build --use-container
+      working-directory: ./lambda
+
+    - name: zip lambda
+      run: zip -r ../../../lambda.zip ./*
+      working-directory: ./lambda/.aws-sam/build/LogForwarderFunction

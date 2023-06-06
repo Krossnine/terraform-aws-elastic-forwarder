@@ -1,14 +1,10 @@
-name: Pull Request
+name: Terraform release module
 
 on:
-  pull_request:
-    types:
-      - opened
-      - edited
-      - synchronize
-
-permissions:
-  pull-requests: write
+  push:
+    tags:
+      - v*
+  workflow_dispatch:
 
 jobs:
   call-terraform-test-workflow:
@@ -46,3 +42,23 @@ jobs:
       statuses: read
     name: Test Lambda
     uses: ./.github/workflows/test-lambda.yml
+
+  release:
+    needs: [call-terraform-test-workflow, call-lambda-test-and-build-workflow]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Test lambda before release
+        uses: ./.github/workflows/test-lambda.yml
+
+      - name: Test Terraform before release
+        uses: ./.github/workflows/test-tf.yml
+
+      - name: publish release
+        uses: ncipollo/release-action@v1
+        with:
+          generateReleaseNotes: true
+          name: 'v${{ github.ref_name }}'
+          token: ${{ secrets.GITHUB_TOKEN }}

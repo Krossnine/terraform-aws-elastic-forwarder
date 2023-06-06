@@ -1,0 +1,49 @@
+name: Bump & Build
+
+on:
+  pull_request:
+    types: [closed]
+  workflow_dispatch:
+
+jobs:
+  bump-and-build:
+    if: github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        ref: ${{ github.event.pull_request.head.ref }}
+    - uses: paulhatch/semantic-version@v5.0.2
+    - name: Bump Lambda module version
+      run: |
+        jq '.version="${{ steps.semantic.outputs.version }}"' lambda/src/package.json > lambda/src/package.tmp.json
+        mv lambda/src/package.tmp.json lambda/src/package.json
+
+    - name: Build lambda
+      run: sam build
+      working-directory: ./lambda
+
+    - name: Compress lambda
+      run: |
+        zip -r ../../../lambda.zip ./*
+        git config --global user.email "no-reply@github.com"
+        git config --global user.name "GitHub Actions"
+        git add -A
+
+      working-directory: ./lambda/.aws-sam/build/LogForwarderFunction
+
+    - name: Render terraform docs & push changes
+      uses: terraform-docs/gh-actions@v1.0.0
+      with:
+        working-dir: .
+        git-push: "true"
+        config-file: .terraform-docs.yml
+        git-commit-message: "chore(module): bump elastic-forwarder module"
+
+    - name: Tag changes
+      run: |
+        git config --global user.email "no-reply@github.com"
+        git config --global user.name "GitHub Actions"
+        git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
+        git tag -a v${{ steps.semantic.outputs.version }} -m "v${{ steps.semantic.outputs.version }}"
+        git push --tags
