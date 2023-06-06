@@ -5,6 +5,8 @@ on:
     types: [closed]
   workflow_dispatch:
 
+permissions: read-all
+
 jobs:
   bump-and-build:
     if: github.event.pull_request.merged == true

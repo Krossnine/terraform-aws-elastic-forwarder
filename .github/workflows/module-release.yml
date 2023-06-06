@@ -6,6 +6,8 @@ on:
       - v*
   workflow_dispatch:
 
+permissions: read-all
+
 jobs:
   call-terraform-test-workflow:
     permissions:
