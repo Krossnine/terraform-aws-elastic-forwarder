@@ -86,7 +86,7 @@ jobs:
       - ts-check
     steps:
     - name: Install ZIP
-      run: apt-get install -y zip
+      run: sudo apt-get install -y zip
 
     - name: Install AWS SAM CLI
       uses: aws-actions/setup-sam@v2
