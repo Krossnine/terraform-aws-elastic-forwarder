@@ -26,9 +26,7 @@ jobs:
 
     - uses: paulhatch/semantic-version@v5.0.2
     - name: Bump Lambda module version
-      run: |
-        jq '.version="${{ steps.semantic.outputs.version }}"' lambda/src/package.json > lambda/src/package.tmp.json
-        mv lambda/src/package.tmp.json lambda/src/package.json
+      run: jq '.version="${{ steps.semantic.outputs.version }}"' lambda/src/package.json | sponge lambda/src/package.json
 
     - name: Build lambda
       run: sam build
