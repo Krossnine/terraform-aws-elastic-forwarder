@@ -102,12 +102,14 @@ You can test Github actions locally with Act. To do so, you need to have Docker 
 
   - Run specific workflow :
     ```sh
-    act -W <workflow_name>
+    # act -W <workflow_name>
+    act -W .github/workflows/test-tf.yml
     ```
 
   - Run specific job :
     ```sh
-    act -j <job_name>
+    # act -j <job_name>
+    act -j bump-and-build
     ```
 
   - Run specific job with specific event :
