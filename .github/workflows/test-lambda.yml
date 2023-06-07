@@ -115,6 +115,6 @@ jobs:
       run: sam build --use-container
       working-directory: ./lambda
 
-    - name: zip lambda
-      run: zip -r ../../../lambda.zip ./*
-      working-directory: ./lambda/.aws-sam/build/LogForwarderFunction
+    - name: Compress lambda
+      run: npm run postbuild
+      working-directory: ./lambda/src
