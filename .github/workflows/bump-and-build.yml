@@ -12,8 +12,8 @@ jobs:
     if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
     steps:
-    - name: Install ZIP
-      run: sudo apt-get install -y zip
+    - name: Install ZIP & Sponge cmds
+      run: sudo apt-get install -y zip moreutils
 
     - name: Install AWS SAM CLI
       uses: aws-actions/setup-sam@v2
@@ -40,9 +40,9 @@ jobs:
 
     - name: Compress lambda
       run: |
-        zip -r ../../../lambda.zip ./*
+        npm run postbuild
         git add -A
-      working-directory: ./lambda/.aws-sam/build/LogForwarderFunction
+      working-directory: ./lambda/src
 
     - name: Render terraform docs & push changes
       uses: terraform-docs/gh-actions@v1.0.0
