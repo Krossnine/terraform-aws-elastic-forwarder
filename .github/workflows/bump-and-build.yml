@@ -24,6 +24,12 @@ jobs:
       with:
         ref: ${{ github.event.pull_request.head.ref }}
 
+    - name: setup git
+      run: |
+        git config --global user.email "no-reply@github.com"
+        git config --global user.name "GitHub Actions"
+        git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
+
     - uses: paulhatch/semantic-version@v5.0.2
     - name: Bump Lambda module version
       run: jq '.version="${{ steps.semantic.outputs.version }}"' lambda/src/package.json | sponge lambda/src/package.json
@@ -35,8 +41,6 @@ jobs:
     - name: Compress lambda
       run: |
         zip -r ../../../lambda.zip ./*
-        git config --global user.email "no-reply@github.com"
-        git config --global user.name "GitHub Actions"
         git add -A
       working-directory: ./lambda/.aws-sam/build/LogForwarderFunction
 
@@ -50,8 +54,5 @@ jobs:
 
     - name: Push tag
       run: |
-        git config --global user.email "no-reply@github.com"
-        git config --global user.name "GitHub Actions"
-        git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
         git tag -a v${{ steps.semantic.outputs.version }} -m "v${{ steps.semantic.outputs.version }}"
         git push --tags
