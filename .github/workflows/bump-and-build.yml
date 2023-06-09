@@ -1,0 +1,58 @@
+name: Bump & Build
+
+on:
+  pull_request:
+    types: [closed]
+  workflow_dispatch:
+
+permissions: read-all
+
+jobs:
+  bump-and-build:
+    if: github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+    steps:
+    - name: Install ZIP & Sponge cmds
+      run: sudo apt-get install -y zip moreutils
+
+    - name: Install AWS SAM CLI
+      uses: aws-actions/setup-sam@v2
+      with:
+        use-installer: true
+
+    - uses: actions/checkout@v3
+      with:
+        ref: ${{ github.event.pull_request.head.ref }}
+
+    - name: setup git
+      run: |
+        git config --global user.email "no-reply@github.com"
+        git config --global user.name "GitHub Actions"
+        git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
+
+    - uses: paulhatch/semantic-version@v5.0.2
+    - name: Bump Lambda module version
+      run: jq '.version="${{ steps.semantic.outputs.version }}"' lambda/src/package.json | sponge lambda/src/package.json
+
+    - name: Build lambda
+      run: sam build
+      working-directory: ./lambda
+
+    - name: Compress lambda
+      run: |
+        npm run postbuild
+        git add -A
+      working-directory: ./lambda/src
+
+    - name: Render terraform docs & push changes
+      uses: terraform-docs/gh-actions@v1.0.0
+      with:
+        working-dir: .
+        git-push: "true"
+        config-file: .terraform-docs.yml
+        git-commit-message: "chore(module): bump elastic-forwarder module"
+
+    - name: Push tag
+      run: |
+        git tag -a v${{ steps.semantic.outputs.version }} -m "v${{ steps.semantic.outputs.version }}"
+        git push --tags

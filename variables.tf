@@ -92,7 +92,12 @@ variable "lambda_enable_dashboard" {
 
 # CloudWatch log subscriptions
 variable "cloudwatch_log_group_subscriptions" {
-  type        = list(map(string))
+  type = list(object({
+    key    = string
+    arn    = string
+    region = string
+  }))
+
   description = <<EOF
     This variable is used to define a list of CloudWatch log groups
     with associated subscription filters. Each item in the list

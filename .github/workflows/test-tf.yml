@@ -26,7 +26,6 @@ jobs:
         args: validate
 
   format:
-    needs: validate
     name: Format
     runs-on: ubuntu-latest
     steps:
@@ -40,7 +39,6 @@ jobs:
         args: fmt -check=true -diff=true -recursive
 
   lint:
-    needs: format
     name: Lint
     runs-on: ubuntu-latest
     steps:
@@ -68,10 +66,13 @@ jobs:
 
   tfsec:
     needs:
-      - validate
-      - format
       - lint
+      - format
+      - validate
     name: Tfsec
+    permissions:
+      contents: read
+      security-events: write
     runs-on: ubuntu-latest
     steps:
     - name: Checkout code
@@ -86,7 +87,9 @@ jobs:
 
   checkov:
     needs:
-      - tfsec
+      - lint
+      - format
+      - validate
     permissions:
       actions: read
       contents: read

@@ -13,6 +13,8 @@ skip-check:
   - CKV_AWS_173
   - CKV_AWS_272
   - CKV_AWS_338
+skip-path:
+  - test
 output:
   - cli
 summary-position: bottom
