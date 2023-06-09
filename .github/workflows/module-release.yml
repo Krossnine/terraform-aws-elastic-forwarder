@@ -63,4 +63,4 @@ jobs:
         with:
           generateReleaseNotes: true
           name: 'v${{ github.ref_name }}'
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ github.token }}
