@@ -31,6 +31,9 @@ jobs:
         git remote set-url origin https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}
 
     - uses: paulhatch/semantic-version@v5.0.2
+      id: semantic
+      with:
+        tag_prefix: "v"
     - name: Bump Lambda module version
       run: jq '.version="${{ steps.semantic.outputs.version }}"' lambda/src/package.json | sponge lambda/src/package.json
 
@@ -50,11 +53,11 @@ jobs:
         working-dir: .
         git-push: "false"
         config-file: .terraform-docs.yml
-        git-commit-message: "chore(module): bump elastic-forwarder module [skip ci]"
 
     - name: Push changes
       run: |
-        git status
+        git diff
         git push origin main
-        git tag -a v${{ steps.semantic.outputs.version }} -m "v${{ steps.semantic.outputs.version }}"
+        git commit -m "chore(module): bump elastic-forwarder module [skip ci]"
+        git tag -a ${{ steps.semantic.outputs.version_tag }} -m "${{ steps.semantic.outputs.version_tag }}"
         git push --tags
