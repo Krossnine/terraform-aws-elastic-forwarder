@@ -92,6 +92,12 @@ To set up a development environment, please follow these steps:
 
 You can (should ?) run Unit, Functionnal, Integration Tests locally before pushing your code.
 
+  - Start AWS & ELK docker instances with localstack
+    ```sh
+    cd ./test
+    docker-compose up
+    ```
+
   - All Tests :
     ```sh
     cd ./test/terratest
