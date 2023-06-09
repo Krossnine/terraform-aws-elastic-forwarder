@@ -2,7 +2,9 @@ package terraform_test
 
 import (
 	_ "fmt"
+	AWS "github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/service/cloudwatchlogs"
+	aws "github.com/gruntwork-io/terratest/modules/aws"
 	"github.com/gruntwork-io/terratest/modules/terraform"
 	"github.com/stretchr/testify/assert"
 	"io"
@@ -11,10 +13,7 @@ import (
 	"regexp"
 	"testing"
 	"time"
-	AWS "github.com/aws/aws-sdk-go/aws"
-	aws "github.com/gruntwork-io/terratest/modules/aws"
 )
-
 
 const PlanFilePath = "plan.out"
 
@@ -32,7 +31,7 @@ func configureTerraformWithPlan(t *testing.T, target string) *terraform.Options 
 		TerraformDir: "../terraform",
 		VarFiles:     []string{"terraform.tfvars"},
 		NoColor:      true,
-		Targets: 		[]string{target},
+		Targets:      []string{target},
 		PlanFilePath: PlanFilePath,
 	})
 }
@@ -42,28 +41,28 @@ func configureTerraform(t *testing.T, target string) *terraform.Options {
 		TerraformDir: "../terraform",
 		VarFiles:     []string{"terraform.tfvars"},
 		NoColor:      true,
-		Targets: 		[]string{target},
+		Targets:      []string{target},
 	})
 }
 
 func TestModule(t *testing.T) {
-    for _, testFuncs := range []struct{
-        name string
-        tfunc func(*testing.T)
-    }{
-			{"Plan Test", planTest},
-			{"Unit Test", unitTest},
-			{"Integration Test", integrationTest},
-		} {
-        t.Run(testFuncs.name, testFuncs.tfunc)
-    }
+	for _, testFuncs := range []struct {
+		name  string
+		tfunc func(*testing.T)
+	}{
+		{"Plan Test", planTest},
+		{"Unit Test", unitTest},
+		{"Integration Test", integrationTest},
+	} {
+		t.Run(testFuncs.name, testFuncs.tfunc)
+	}
 }
 
 func integrationTest(t *testing.T) {
 	terraformOpts := configureTerraform(t, "module.test")
 	defer terraform.Destroy(t, terraformOpts)
 	var streamParams = cloudwatchlogs.CreateLogStreamInput{
-		LogGroupName: AWS.String("test2"),
+		LogGroupName:  AWS.String("test2"),
 		LogStreamName: AWS.String("test2"),
 	}
 	var params = cloudwatchlogs.PutLogEventsInput{
@@ -73,7 +72,7 @@ func integrationTest(t *testing.T) {
 				Timestamp: AWS.Int64(time.Now().Unix() * 1000),
 			},
 		},
-		LogGroupName: AWS.String("test2"),
+		LogGroupName:  AWS.String("test2"),
 		LogStreamName: AWS.String("test2"),
 	}
 
@@ -84,7 +83,6 @@ func integrationTest(t *testing.T) {
 	client := aws.NewCloudWatchLogsClient(t, Region)
 	client.Endpoint = "http://127.0.0.1:4566"
 	client.CreateLogStream(&streamParams)
-
 
 	// Create ELK index & alias (if not exists)
 	elkCreateIndex(t)
@@ -137,7 +135,7 @@ func cloudWatchDashboardTest(t *testing.T) {
 	// Dashboard should exist and have the correct name
 	assert.Regexp(
 		t,
-		regexp.MustCompile("arn:aws:cloudwatch::\\d{12}dashboard/" + FnName + "-overview"),
+		regexp.MustCompile("arn:aws:cloudwatch::\\d{12}dashboard/"+FnName+"-overview"),
 		terraform.Output(t, terraformOpts, "cloudwatch_dashboard"),
 	)
 }
@@ -194,8 +192,8 @@ func subscriptionPermissionTest(t *testing.T) {
 		exepectedStatementID := subscriptionsLogGroupNames[i] + "-AllowExecutionFromCloudWatch"
 
 		assert.Equal(t, "lambda:InvokeFunction", permissions[i]["action"])
-		assert.Equal(t, subscriptionsLogGroupNames[i] + "-AllowExecutionFromCloudWatch", permissions[i]["id"])
-		assert.Equal(t, "logs."+ Region +".amazonaws.com", permissions[i]["principal"])
+		assert.Equal(t, subscriptionsLogGroupNames[i]+"-AllowExecutionFromCloudWatch", permissions[i]["id"])
+		assert.Equal(t, "logs."+Region+".amazonaws.com", permissions[i]["principal"])
 		assert.Equal(t, FnName, permissions[i]["function_name"])
 		assert.Equal(t, exepectedStatementID, permissions[i]["statement_id"])
 
