@@ -15,7 +15,7 @@ Included features :
 ![test](https://github.com/Krossnine/terraform-aws-elastic-forwarder/actions/workflows/test-tf.yml/badge.svg)
 ![test](https://github.com/Krossnine/terraform-aws-elastic-forwarder/actions/workflows/test-lambda.yml/badge.svg)
 ![test](https://github.com/Krossnine/terraform-aws-elastic-forwarder/actions/workflows/build-lambda.yml/badge.svg)
-![test](https://github.com/Krossnine/terraform-aws-elastic-forwarder/actions/workflows/build-lambda.yml/badge.svg)
+![test](https://github.com/Krossnine/terraform-aws-elastic-forwarder/actions/workflows/integration-test.yml/badge.svg)
 
 ## Usage
 
