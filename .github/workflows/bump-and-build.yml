@@ -56,8 +56,9 @@ jobs:
 
     - name: Push changes
       run: |
+        echo "${{ steps.semantic.outputs.version_tag }} ${{ steps.semantic.outputs.version }}"
         git diff
-        git push origin main
         git commit -m "chore(module): bump elastic-forwarder module [skip ci]"
+        git push origin main
         git tag -a ${{ steps.semantic.outputs.version_tag }} -m "${{ steps.semantic.outputs.version_tag }}"
         git push --tags
