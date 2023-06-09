@@ -30,21 +30,16 @@ jobs:
         git config --global user.name "GitHub Actions"
         git remote set-url origin https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}
 
-    - uses: paulhatch/semantic-version@v5.0.2
+    - name: Bump module version
       id: semantic
-      with:
-        tag_prefix: "v"
-    - name: Bump Lambda module version
-      run: jq '.version="${{ steps.semantic.outputs.version }}"' lambda/src/package.json | sponge lambda/src/package.json
+      run: npx standard-version
 
     - name: Build lambda
       run: sam build
       working-directory: ./lambda
 
     - name: Compress lambda
-      run: |
-        npm run postbuild
-        git add -A
+      run: npm run postbuild
       working-directory: ./lambda/src
 
     - name: Render terraform docs & push changes
@@ -54,9 +49,8 @@ jobs:
         git-push: "false"
         config-file: .terraform-docs.yml
 
-    - name: Push changes
+    - name: Add & Push changes & tag
       run: |
-        git commit -m "chore(module): bump elastic-forwarder module [skip ci]"
-        git push
-        git tag -a ${{ steps.semantic.outputs.version_tag }} -m "${{ steps.semantic.outputs.version_tag }}"
-        git push --tags
+        git add -A
+        git commit --amend --no-edit
+        git push --follow-tags

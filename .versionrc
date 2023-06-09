@@ -1,0 +1,51 @@
+{
+  "releaseCommitMessageFormat": "chore(release): {{currentTag}} [skip ci]",
+  "bumpFiles": [
+    {
+      "filename": "lambda/src/package.json",
+      "type": "json"
+    }
+  ],
+  "types": [
+    {
+      "type": "feat",
+      "section": "🚀 Features"
+    },
+    {
+      "type": "fix",
+      "section": "🐛 Bug Fixes"
+    },
+    {
+      "type": "docs",
+      "section": "📚 Documentation"
+    },
+    {
+      "type": "doc",
+      "section": "📚 Documentation"
+    },
+    {
+      "type": "refactor",
+      "section": "🛠  Improvements"
+    },
+    {
+      "type": "test",
+      "section": "🛠  Improvements"
+    },
+    {
+      "type": "perf",
+      "section": "🛠  Improvements"
+    },
+    {
+      "type": "chore",
+      "section": "🏗  Chore"
+    },
+    {
+      "type": "ci",
+      "section": "🏗  Chore"
+    },
+    {
+      "type": "style",
+      "section": "🏗  Chore"
+    }
+  ]
+}
