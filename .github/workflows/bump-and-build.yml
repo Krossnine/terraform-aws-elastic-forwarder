@@ -52,8 +52,9 @@ jobs:
         config-file: .terraform-docs.yml
         git-commit-message: "chore(module): bump elastic-forwarder module [skip ci]"
 
-    - name: Push tag
+    - name: Push changes
       run: |
-        git push
+        git status
+        git push origin main
         git tag -a v${{ steps.semantic.outputs.version }} -m "v${{ steps.semantic.outputs.version }}"
         git push --tags
