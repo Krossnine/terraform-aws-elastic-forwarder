@@ -13,7 +13,7 @@
     "compile": "tsc",
     "test:functional": "npm run compile && cd ../ && sam build && sam local invoke LogForwarderFunction --event ./events/simple-log.json",
     "ts-check": "tsc --noEmit --pretty --project tsconfig.json",
-    "postbuild": "zip -r ../../../lambda.zip ../.aws-sam/build/LogForwarderFunction/*"
+    "postbuild": "zip -r ../lambda.zip ../.aws-sam/build/LogForwarderFunction/*"
   },
   "dependencies": {
     "axios": "^1.4.0",
