@@ -48,11 +48,12 @@ jobs:
       uses: terraform-docs/gh-actions@v1.0.0
       with:
         working-dir: .
-        git-push: "true"
+        git-push: "false"
         config-file: .terraform-docs.yml
-        git-commit-message: "chore(module): bump elastic-forwarder module"
+        git-commit-message: "chore(module): bump elastic-forwarder module [skip ci]"
 
     - name: Push tag
       run: |
+        git push
         git tag -a v${{ steps.semantic.outputs.version }} -m "v${{ steps.semantic.outputs.version }}"
         git push --tags
