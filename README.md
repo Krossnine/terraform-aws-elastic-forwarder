@@ -10,9 +10,11 @@ Included features :
 - Passive and active filtering of log events at subscription and lambda level
 - Retry mechanism for failed log forward requests
 
+:warning: You should to use an elastic `alias` instead of a pure `index` to avoid data loss when the index is rotated.
 
 ![test](https://github.com/Krossnine/terraform-aws-elastic-forwarder/actions/workflows/test-tf.yml/badge.svg)
 ![test](https://github.com/Krossnine/terraform-aws-elastic-forwarder/actions/workflows/test-lambda.yml/badge.svg)
+![test](https://github.com/Krossnine/terraform-aws-elastic-forwarder/actions/workflows/build-lambda.yml/badge.svg)
 ![test](https://github.com/Krossnine/terraform-aws-elastic-forwarder/actions/workflows/build-lambda.yml/badge.svg)
 
 ## Usage
@@ -121,7 +123,7 @@ No modules.
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
 | <a name="input_cloudwatch_log_forward_filter_pattern"></a> [cloudwatch\_log\_forward\_filter\_pattern](#input\_cloudwatch\_log\_forward\_filter\_pattern) | (Optional) Defines the CloudWatch Logs filter pattern used<br>    to subscribe to a filtered stream of log events.<br>    An empty string matches all events.<br>    See the CloudWatch Logs User Guide for more information. | `string` | `""` | no |
-| <a name="input_cloudwatch_log_group_subscriptions"></a> [cloudwatch\_log\_group\_subscriptions](#input\_cloudwatch\_log\_group\_subscriptions) | This variable is used to define a list of CloudWatch log groups<br>    with associated subscription filters. Each item in the list<br>    should include the ARN, ID, and name of a CloudWatch log group where a<br>    subscription filter will be added to send logs to the log forwarder<br>    Lambda function. | `list(map(string))` | n/a | yes |
+| <a name="input_cloudwatch_log_group_subscriptions"></a> [cloudwatch\_log\_group\_subscriptions](#input\_cloudwatch\_log\_group\_subscriptions) | This variable is used to define a list of CloudWatch log groups<br>    with associated subscription filters. Each item in the list<br>    should include the ARN, ID, and name of a CloudWatch log group where a<br>    subscription filter will be added to send logs to the log forwarder<br>    Lambda function. | <pre>list(object({<br>    key    = string<br>    arn    = string<br>    region = string<br>  }))</pre> | n/a | yes |
 | <a name="input_default_tags"></a> [default\_tags](#input\_default\_tags) | The default tags to apply to all resources | `map(string)` | `{}` | no |
 | <a name="input_elastic_allowed_log_fields"></a> [elastic\_allowed\_log\_fields](#input\_elastic\_allowed\_log\_fields) | The list of allowed log keys to forward to elastic search.<br>    If empty, all keys will be forwarded.<br>    This concern each keys in log events.<br>    To target specific nested properties in log events you can flatten them using the following syntax :<br>      - "key" to target the key property<br>      - "key.subkey" to target the subkey property<br><br>    Example: ["message", "log.level", "my.nested.0.property"] | `list(string)` | `[]` | no |
 | <a name="input_elastic_request_timeout_ms"></a> [elastic\_request\_timeout\_ms](#input\_elastic\_request\_timeout\_ms) | The request time limit for the ELK request in milliseconds.<br>    Be aware that this is not the lambda timeout,<br>    Your need to orchestrate each of this variables accordingly :<br>      - log\_forwarder\_lambda\_ttl<br>      - elastic\_request\_timeout\_ms<br>      - elastic\_search\_retry\_count<br><br>    You can use the following formula to calculate the request timeout :<br>      elastic\_request\_timeout\_ms = (log\_forwarder\_lambda\_ttl - 1) * 1000 / (elastic\_search\_retry\_count + 1)<br>    Where :<br>      - log\_forwarder\_lambda\_ttl is the lambda timeout in seconds minus 1 second for the cold start<br>      - elastic\_search\_retry\_count is the number of retry plus the initial request<br><br>    Do not forget to add a gap to the lambda ttl for the initialization and the initial request before retries. | `number` | `3000` | no |
@@ -142,6 +144,10 @@ No modules.
 
 | Name | Description |
 |------|-------------|
-| <a name="output_cloudwatch_subscriptions"></a> [cloudwatch\_subscriptions](#output\_cloudwatch\_subscriptions) | The ARN of the cloudwatch subscription filters |
-| <a name="output_log_forwarder_lambda_arn"></a> [log\_forwarder\_lambda\_arn](#output\_log\_forwarder\_lambda\_arn) | The ARN of the Lambda function that forwards logs to CloudWatch |
+| <a name="output_cloudwatch_dashboard"></a> [cloudwatch\_dashboard](#output\_cloudwatch\_dashboard) | The ARN of the cloudwatch dashboard |
+| <a name="output_cloudwatch_subscriptions"></a> [cloudwatch\_subscriptions](#output\_cloudwatch\_subscriptions) | The info about the cloudwatch subscription |
+| <a name="output_lambda_execution_role"></a> [lambda\_execution\_role](#output\_lambda\_execution\_role) | The ARN of the lambda execution role |
+| <a name="output_lambda_function"></a> [lambda\_function](#output\_lambda\_function) | The ARN of the Lambda function that forwards logs to CloudWatch |
+| <a name="output_lambda_function_role"></a> [lambda\_function\_role](#output\_lambda\_function\_role) | The ARN of the lambda IAM task execution role |
+| <a name="output_log_subscription_permission"></a> [log\_subscription\_permission](#output\_log\_subscription\_permission) | The info of the invocation permission |
 <!-- END_TF_DOCS -->
