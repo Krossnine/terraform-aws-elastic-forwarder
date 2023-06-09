@@ -6,7 +6,9 @@ exclude: |
     examples/with-dynamic-lambda-ttl/main.tf|
     examples/with-dynamic-log-groups/main.tf|
     examples/with-dynamic-request-ttl/main.tf|
-    examples/with-dynamic-retry/main.tf
+    examples/with-dynamic-retry/main.tf|
+    test/terraform/main.tf|
+    test/terraform/providers.tf
   )$
 repos:
 - repo: https://github.com/antonbabenko/pre-commit-terraform

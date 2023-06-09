@@ -1,5 +1,11 @@
 # Custom
 
+# Docker volumes
+test/volume/
+
+# Plan file for testing in case of remove error
+plan.out
+
 # Terraform
 .terraform.lock.hcl
 .terraform/

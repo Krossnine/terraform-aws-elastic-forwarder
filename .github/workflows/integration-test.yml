@@ -1,0 +1,50 @@
+name: Terraform integration tests
+
+on:
+  workflow_call:
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  integration:
+    name: Integration tests
+    runs-on: ubuntu-latest
+    services:
+      setup-localstack-service:
+        image: localstack/localstack
+        ports:
+          - "4566:4566"
+          - "127.0.0.1:4566:4566"            # LocalStack Gateway
+          - "127.0.0.1:4510-4559:4510-4559"  # ext services port range
+          - "127.0.0.1:53:53"                # DNS config
+          - "127.0.0.1:53:53/udp"            # DNS config
+          - "127.0.0.1:80:80"                # LocalStack HTTP Gateway
+          - "127.0.0.1:443:443"              # LocalStack HTTPS Gateway
+        env:
+          SERVICES: s3,lambda,logs,cloudformation,sts,iam,ec2,route53,cloudwatch,secretsmanager,stepfunctions,events
+          DEFAULT_REGION: "eu-west-1"
+          DOCKER_HOST: unix:///var/run/docker.sock
+      setup-elastic-service:
+        image: docker.elastic.co/elasticsearch/elasticsearch:7.10.1
+        ports:
+          - "9200:9200"
+        env:
+          discovery.type: single-node
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Install Go
+        uses: actions/setup-go@v4
+      - name: Install dependencies
+        working-directory: test/terratest
+        run: |
+          go get -v -t -d
+          go mod tidy
+      - name: Test
+        working-directory: test/terratest
+        run: go test -v -timeout 30m -parallel 128
+        env:
+          AWS_ACCESS_KEY_ID: "null"
+          AWS_SECRET_ACCESS_KEY: "null"

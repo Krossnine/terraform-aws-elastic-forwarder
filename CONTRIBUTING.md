@@ -16,6 +16,7 @@ To set up a development environment, please follow these steps:
    ```
 
 3. Install dependencies:
+
     - Bases :
       - Install [Terraform](https://www.terraform.io/downloads.html) (v0.12.0+)
       - Install [Node & npm](https://nodejs.org/en/download) (v14.15.0+)
@@ -29,6 +30,9 @@ To set up a development environment, please follow these steps:
     - For testing lambda :
       - Install [AWS SAM CLI](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/install-sam-cli.html#install-sam-cli-instructions)
 
+    - For testing module :
+      - Install [Go](https://go.dev/doc/install)
+
     - (Optional) To run Github actions locally :
       - Install [Docker](https://docs.docker.com/get-docker/) (v20.10.0+)
       - Install [Act](https://github.com/nektos/act#installation-through-package-managers) (v0.2.46+)
@@ -36,36 +40,36 @@ To set up a development environment, please follow these steps:
 
 4. AWS Lambda function development
 
-  - Install dependencies :
-    ```sh
-    cd ./lambda/src
-    npm i
-    ```
+    - Install dependencies :
+      ```sh
+      cd ./lambda/src
+      npm i
+      ```
 
-  - Common scripts :
-    ```sh
-    cd ./lambda/src
-    npm run compile     // Compile typescript to javascript
-    npm run unit        // Run unit tests
-    npm run functional  // Run functional tests
-    npm run lint        // check code style
-    npm run lint-fix    // fix code style
-    ```
+    - Common scripts :
+      ```sh
+      cd ./lambda/src
+      npm run compile     // Compile typescript to javascript
+      npm run unit        // Run unit tests
+      npm run functional  // Run functional tests
+      npm run lint        // check code style
+      npm run lint-fix    // fix code style
+      ```
 
-  - Build lambda function :
-    ```sh
-    cd ./lambda
-    sam build
-    ```
+    - Build lambda function :
+      ```sh
+      cd ./lambda
+      sam build
+      ```
 
-  - Compress lambda function :
-    ```sh
-    cd ./lambda/src
-    npm i
-    npm run compile
-    cd ../.aws-sam/build/LogForwarderFunction
-    zip -r ../../../LogForwarderFunction.zip .
-    ```
+    - Compress lambda function :
+      ```sh
+      cd ./lambda/src
+      npm i
+      npm run compile
+      cd ../.aws-sam/build/LogForwarderFunction
+      zip -r ../../../LogForwarderFunction.zip .
+      ```
 
 5. Run pre-commit by hand :
 
@@ -84,7 +88,31 @@ To set up a development environment, please follow these steps:
     pre-commit run terraform_checkov
     ```
 
-6. Run CI/CD pipeline locally :
+6. Run Tests with Terratest :
+
+You can (should ?) run Unit, Functionnal, Integration Tests locally before pushing your code.
+
+  - All Tests :
+    ```sh
+    cd ./test/terratest
+    go test -v
+    ```
+
+  - Specific test :
+    ```sh
+    # go test -v -run <test_name>
+    #   available tests :
+    #     - TestModule/PlanTest
+    #     - TestModule/CloudWatch_Dashboard_Test
+    #     - TestModule/Subscription_Filters_Test
+    #     - TestModule/Subscription_Permission_Test
+    #     - TestModule/Integration_Test
+
+    cd ./test/terratest
+    go test -v -run TestModule/PlanTest
+    ```
+
+7. Run CI/CD pipeline locally :
 
 You can test Github actions locally with Act. To do so, you need to have Docker installed on your machine and Act.
 

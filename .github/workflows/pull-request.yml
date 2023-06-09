@@ -46,3 +46,21 @@ jobs:
       statuses: read
     name: Test Lambda
     uses: ./.github/workflows/test-lambda.yml
+
+  call-integration-tests-workflow:
+    if: ${{ false }}  # disable for now
+    permissions:
+      actions: read
+      checks: read
+      contents: write
+      deployments: read
+      discussions: read
+      issues: read
+      id-token: write
+      packages: read
+      pages: read
+      pull-requests: read
+      repository-projects: read
+      security-events: write
+      statuses: read
+    uses: ./.github/workflows/integration-test.yml
