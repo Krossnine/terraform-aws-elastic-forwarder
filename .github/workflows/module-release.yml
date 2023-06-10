@@ -58,6 +58,7 @@ jobs:
       - name: publish release
         uses: ncipollo/release-action@v1
         with:
-          generateReleaseNotes: true
-          name: 'v${{ github.ref_name }}'
+          makeLatest: true
+          bodyFile: CHANGELOG.md
+          name: ${{ github.ref_name }}
           token: ${{ github.token }}
