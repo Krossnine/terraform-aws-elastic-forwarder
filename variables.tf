@@ -101,7 +101,7 @@ variable "cloudwatch_log_group_subscriptions" {
   description = <<EOF
     This variable is used to define a list of CloudWatch log groups
     with associated subscription filters. Each item in the list
-    should include the ARN, ID, and name of a CloudWatch log group where a
+    should include the ARN, Name, and region of a CloudWatch log group where a
     subscription filter will be added to send logs to the log forwarder
     Lambda function.
   EOF
