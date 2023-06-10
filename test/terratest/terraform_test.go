@@ -50,9 +50,9 @@ func TestModule(t *testing.T) {
 		name  string
 		tfunc func(*testing.T)
 	}{
+		{"Integration Test", integrationTest},
 		{"Plan Test", planTest},
 		{"Unit Test", unitTest},
-		{"Integration Test", integrationTest},
 	} {
 		t.Run(testFuncs.name, testFuncs.tfunc)
 	}
@@ -88,6 +88,9 @@ func integrationTest(t *testing.T) {
 	elkCreateIndex(t)
 	elkCreateAlias(t)
 
+	// Wait for index and alias to be created
+	time.Sleep(10 * time.Second)
+
 	// Simulate aws log event
 	req, _ := client.PutLogEventsRequest(&params)
 	err := req.Send()
@@ -95,7 +98,7 @@ func integrationTest(t *testing.T) {
 	assert.NoError(t, err)
 
 	// Wait for lambda to post logs to ELK and ELK to index them
-	time.Sleep(10 * time.Second)
+	time.Sleep(30 * time.Second)
 
 	// Get logs from ELK
 	getLogsResp, getLogsBody := elkGetLogs(t)
