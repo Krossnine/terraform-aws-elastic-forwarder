@@ -27,6 +27,7 @@ jobs:
           DEFAULT_REGION: "eu-west-1"
           DOCKER_HOST: unix:///var/run/docker.sock
           LAMBDA_EXECUTOR: local
+          PROVIDER_OVERRIDE_LAMBDA: legacy
       setup-elastic-service:
         image: docker.elastic.co/elasticsearch/elasticsearch:7.10.1
         ports:
