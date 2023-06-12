@@ -20,7 +20,6 @@ services:
     volumes:
       - "${LOCALSTACK_VOLUME_DIR:-./volume}:/var/lib/localstack"
       - "/var/run/docker.sock:/var/run/docker.sock"
-
   elk:
     image: docker.elastic.co/elasticsearch/elasticsearch:7.10.1
     ports:

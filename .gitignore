@@ -1,14 +1,4 @@
-# Custom
-
-# Docker volumes
-test/volume/
-
-# Plan file for testing in case of remove error
-plan.out
-
-# Terraform
-.terraform.lock.hcl
-.terraform/
+⚠️ WARNING ! ⚠️ Some Custom Rules are added at the end of this file. Please do not remove them ⚠️ WARNING ! ⚠️
 
 # Created by https://www.toptal.com/developers/gitignore/api/node,linux,macos,windows,jetbrains,terraform,sam+config,visualstudio,jetbrains+all,jetbrains+iml,visualstudiocode
 # Edit at https://www.toptal.com/developers/gitignore?templates=node,linux,macos,windows,jetbrains,terraform,sam+config,visualstudio,jetbrains+all,jetbrains+iml,visualstudiocode
@@ -909,3 +899,18 @@ FodyWeavers.xsd
 # Additional files built by Visual Studio
 
 # End of https://www.toptal.com/developers/gitignore/api/node,linux,macos,windows,jetbrains,terraform,sam+config,visualstudio,jetbrains+all,jetbrains+iml,visualstudiocode
+
+# Custom
+
+# Docker volumes
+test/volume/
+
+# Test files
+!/test/terraform/terraform.tfvars
+
+# Plan file for testing in case of remove error
+plan.out
+
+# Terraform
+.terraform.lock.hcl
+.terraform/

@@ -45,8 +45,25 @@ jobs:
     name: Test Lambda
     uses: ./.github/workflows/test-lambda.yml
 
+  call-integration-tests-workflow:
+    permissions:
+      actions: read
+      checks: read
+      contents: write
+      deployments: read
+      discussions: read
+      issues: read
+      id-token: write
+      packages: read
+      pages: read
+      pull-requests: read
+      repository-projects: read
+      security-events: write
+      statuses: read
+    uses: ./.github/workflows/integration-test.yml
+
   release:
-    needs: [call-terraform-test-workflow, call-lambda-test-and-build-workflow]
+    needs: [call-terraform-test-workflow, call-lambda-test-and-build-workflow, call-integration-tests-workflow]
     runs-on: ubuntu-latest
     permissions:
       contents: write
