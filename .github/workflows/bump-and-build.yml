@@ -36,6 +36,7 @@ jobs:
       run: |
         git fetch
         git fetch --tags
+        git pull --tags
         npx standard-version
 
     - name: Build lambda
