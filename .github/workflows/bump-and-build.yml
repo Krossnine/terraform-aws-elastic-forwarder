@@ -37,6 +37,7 @@ jobs:
         git fetch
         git fetch --tags
         git pull --tags
+        git fetch --prune --unshallow
         npx standard-version
 
     - name: Build lambda
