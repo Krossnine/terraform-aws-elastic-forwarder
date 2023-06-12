@@ -51,8 +51,8 @@ func TestModule(t *testing.T) {
 		tfunc func(*testing.T)
 	}{
 		{"Integration Test", integrationTest},
-		// {"Plan Test", planTest},
-		// {"Unit Test", unitTest},
+		{"Plan Test", planTest},
+		{"Unit Test", unitTest},
 	} {
 		t.Run(testFuncs.name, testFuncs.tfunc)
 	}
