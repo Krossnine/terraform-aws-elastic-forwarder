@@ -33,7 +33,10 @@ jobs:
 
     - name: Bump module version
       id: semantic
-      run: npx standard-version
+      run: |
+        git fetch
+        git fetch --tags
+        npx standard-version
 
     - name: Build lambda
       run: sam build
