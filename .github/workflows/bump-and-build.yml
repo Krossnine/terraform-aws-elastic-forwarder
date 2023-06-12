@@ -34,11 +34,9 @@ jobs:
     - name: Bump module version
       id: semantic
       run: |
-        git fetch
-        git fetch --tags
-        git pull --tags
-        git fetch --prune
-        npx standard-version
+        git --no-pager log
+        git --no-pager tag -l
+        npx standard-version --dry-run
 
     - name: Build lambda
       run: sam build
