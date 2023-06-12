@@ -48,7 +48,6 @@ jobs:
     uses: ./.github/workflows/test-lambda.yml
 
   call-integration-tests-workflow:
-    if: ${{ false }}  # disable for now
     permissions:
       actions: read
       checks: read
