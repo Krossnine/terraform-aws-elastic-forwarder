@@ -27,13 +27,11 @@ jobs:
 
     - name: setup git
       run: |
+        sudo chmod -R ugo+rwX .
+        git pull --tags
         git config --global user.email "no-reply@github.com"
         git config --global user.name "GitHub Actions"
         git remote set-url origin https://x-access-token:${{ secrets.CI_GITHUB_TOKEN }}@github.com/${{ github.repository }}
-
-    - name: Bump module version
-      id: semantic
-      run: npx standard-version
 
     - name: Build lambda
       run: sam build
@@ -50,10 +48,15 @@ jobs:
         git-push: "false"
         config-file: .terraform-docs.yml
 
+    - name: Add artifacts
+      run: |
+        git add -A
+
+    - name: Bump module version
+      id: semantic
+      run: npx standard-version -a --dry-run
+
     - name: Add & Push changes & tag
       run: |
-        sudo chmod -R ugo+rwX .
-        git add -A
-        git commit --amend --no-edit
         git push
-        git push --follow-tags origin main
+        git push origin --tags
