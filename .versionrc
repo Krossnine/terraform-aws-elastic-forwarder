@@ -6,6 +6,12 @@
       "type": "json"
     }
   ],
+  "bumpFiles": [
+    {
+      "filename": "lambda/src/package.json",
+      "type": "json"
+    }
+  ],
   "types": [
     {
       "type": "feat",
