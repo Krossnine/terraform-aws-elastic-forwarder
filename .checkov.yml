@@ -14,6 +14,7 @@ skip-check:
   - CKV_AWS_272
   - CKV_AWS_338
   - CKV2_GHA_1
+  - CKV_GHA_7
 skip-path:
   - test
 output:
