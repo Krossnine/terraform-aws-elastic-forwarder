@@ -51,6 +51,7 @@ jobs:
 
     - name: Add & Push changes & tag
       run: |
+        sudo chmod -R ugo+rwX .
         git add -A
         git commit --amend --no-edit
         git push
