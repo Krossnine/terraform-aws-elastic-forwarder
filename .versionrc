@@ -1,6 +1,6 @@
 {
   "releaseCommitMessageFormat": "chore(release): {{currentTag}} [skip ci]",
-  "bumpFiles": [
+  "packageFiles": [
     {
       "filename": "lambda/src/package.json",
       "type": "json"
