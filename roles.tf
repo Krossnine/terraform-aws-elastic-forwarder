@@ -30,7 +30,7 @@ resource "aws_iam_role_policy_attachment" "lambda_task_execution_role" {
 resource "aws_lambda_permission" "allow_cloudwatch_to_invoke" {
   count = length(var.cloudwatch_log_group_subscriptions)
 
-  statement_id  = "${var.cloudwatch_log_group_subscriptions[count.index].key}-AllowExecutionFromCloudWatch"
+  statement_id  = replace("${var.cloudwatch_log_group_subscriptions[count.index].key}-AllowExecutionFromCloudWatch", "/\\W/", "-")
   action        = "lambda:InvokeFunction"
   function_name = aws_lambda_function.log_forwarder.function_name
   principal     = "logs.${var.cloudwatch_log_group_subscriptions[count.index].region}.amazonaws.com"
