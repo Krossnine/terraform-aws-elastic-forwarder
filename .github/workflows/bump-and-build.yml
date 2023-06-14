@@ -55,4 +55,4 @@ jobs:
         git add -A
         git commit --amend --no-edit
         git push
-        git push --follow-tags origin main
+        git push --tags
