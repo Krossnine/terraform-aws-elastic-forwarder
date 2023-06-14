@@ -56,6 +56,10 @@ jobs:
       id: semantic
       run: npx standard-version -a
 
+    - name: Add artifacts
+      run: |
+        git add -A
+
     - name: Add & Push changes & tag
       run: |
         git push
