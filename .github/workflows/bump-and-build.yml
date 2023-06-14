@@ -54,7 +54,7 @@ jobs:
 
     - name: Bump module version
       id: semantic
-      run: npx standard-version -a --dry-run
+      run: npx standard-version -a
 
     - name: Add & Push changes & tag
       run: |
