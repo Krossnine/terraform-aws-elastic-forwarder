@@ -5,7 +5,11 @@ on:
     tags:
       - 'v*'
   workflow_dispatch:
-
+    inputs:
+      tag:
+        type: string
+        description: the tag to release
+        required: true
 permissions: read-all
 
 jobs:
@@ -79,3 +83,4 @@ jobs:
           bodyFile: CHANGELOG.md
           name: ${{ github.ref_name }}
           token: ${{ github.token }}
+          tag: ${{ github.event.inputs.tag || '' }}
