@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.4](https://github.com/Krossnine/terraform-aws-elastic-forwarder/compare/v0.0.3...v0.0.4) (2023-06-14)
+
+
+### 🐛 Bug Fixes
+
+* **lambda:** bump package.json manually due to standard-version bug ([e8455a8](https://github.com/Krossnine/terraform-aws-elastic-forwarder/commit/e8455a833addee5f67e94079261827daf6dc3490))
+
+
+### 🏗  Chore
+
+* **bump:** add bumpFiles definition due to standard-version bug ([553f024](https://github.com/Krossnine/terraform-aws-elastic-forwarder/commit/553f02471f09d42e1d92a4eb7122ad3179692fa6))
+* **bump:** add git add step just in case ([6e8737a](https://github.com/Krossnine/terraform-aws-elastic-forwarder/commit/6e8737ad54eb746a46d053ca5c08b3cb7036d91d))
+* **release:** update tags trigger syntax ([c520996](https://github.com/Krossnine/terraform-aws-elastic-forwarder/commit/c520996401f5bc434e03547b14f219e184a712dc))
+
 ### [0.0.3](https://github.com/Krossnine/terraform-aws-elastic-forwarder/compare/v0.0.1...v0.0.3) (2023-06-14)
 
 
