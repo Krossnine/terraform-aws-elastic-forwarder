@@ -28,7 +28,7 @@ jobs:
       run: |
         git config --global user.email "no-reply@github.com"
         git config --global user.name "GitHub Actions"
-        git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
+        git remote set-url origin https://x-access-token:${{ secrets.CI_GITHUB_TOKEN }}@github.com/${{ github.repository }}
 
     - name: Bump module version
       id: semantic
