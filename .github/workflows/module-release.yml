@@ -3,7 +3,7 @@ name: Terraform release module
 on:
   push:
     tags:
-      - v*
+      - 'v*'
   workflow_dispatch:
 
 permissions: read-all
