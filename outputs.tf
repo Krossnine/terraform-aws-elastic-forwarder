@@ -3,6 +3,11 @@ output "lambda_function" {
   description = "The ARN of the Lambda function that forwards logs to CloudWatch"
 }
 
+output "lambda_log_group" {
+  value       = aws_cloudwatch_log_group.forwarder_log_group.arn
+  description = "The ARN of the Lambda log group"
+}
+
 output "cloudwatch_subscriptions" {
   value       = aws_cloudwatch_log_subscription_filter.log_forwarder[*]
   description = "The info about the cloudwatch subscription"
