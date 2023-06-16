@@ -237,9 +237,9 @@ describe('Lambda', () => {
         expect(res).toBeUndefined();
       });
 
-      it('should throw error with a corrupted stringified object', () => {
+      it('should return undefined and log an error with a corrupted stringified object', () => {
         const malforedData = '{"a":"myValue","b":' + 'corruptValue10 ' + '"myValue","c":"myValue"}';
-        expect(() => parseMessageObj(malforedData)).toThrow();
+        expect(parseMessageObj(malforedData)).toBeUndefined();
         expect(mockedLoggerError).toHaveBeenCalledWith(expect.anything(), Log.PARSE_MESSAGE_ERROR);
       });
     });
@@ -460,7 +460,7 @@ describe('Lambda', () => {
 
         expect(log).toMatchObject({
           '@id': event.id,
-          '@timestamp': event.timestamp,
+          '@timestamp': '2023-05-26T10:05:41.347Z',
           '@log_group': logGroup,
           '@log_stream': logStream,
           '@message_type': messageType,
@@ -511,7 +511,7 @@ describe('Lambda', () => {
         expect(data).toEqual(
           expect.objectContaining({
             '@id': nginxLog.id,
-            '@timestamp': nginxLog.timestamp,
+            '@timestamp': '2023-05-26T10:05:41.347Z',
             '@log_group': sample.logGroup,
             '@log_stream': sample.logStream,
             '@message_type': sample.messageType,
@@ -551,6 +551,49 @@ describe('Lambda', () => {
         const data = JSON.parse(dataRaw);
 
         expect(data['a.deep.nested.property.in.the.message']).toEqual(Math.PI);
+        allowedFields.forEach((field) => {
+          expect(data[field]).toBeDefined();
+          expect(data[field]).toEqual(nginxMsg[field]);
+        });
+      });
+
+      it('should parse json even if line break or space are present', () => {
+        process.env.ELASTIC_ALLOWED_LOG_FIELDS = allowedFields.join(',');
+        const tmpSample = sample;
+
+        // Add a whitespace at the beginning and line break at the end of the message
+        tmpSample.logEvents[0].message = ' ' + tmpSample.logEvents[0].message + '\n';
+
+        const res = transform(sample);
+        const [actionRaw, dataRaw] = res.split('\n').filter(Boolean);
+        const action = JSON.parse(actionRaw);
+        const data = JSON.parse(dataRaw);
+
+        // Assertions :
+        expect(typeof res).toEqual('string');
+        expect(res.endsWith('\n')).toEqual(true);
+
+        // Actions :
+        expect(action).toMatchObject({
+          index: {
+            _index: defaultEnv.ELASTIC_SEARCH_INDEX,
+            _id: nginxLog.id,
+            require_alias: true,
+          },
+        });
+
+        // Data :
+        expect(data).toEqual(
+          expect.objectContaining({
+            '@id': nginxLog.id,
+            '@timestamp': '2023-05-26T10:05:41.347Z',
+            '@log_group': sample.logGroup,
+            '@log_stream': sample.logStream,
+            '@message_type': sample.messageType,
+            '@owner': sample.owner,
+          }),
+        );
+
         allowedFields.forEach((field) => {
           expect(data[field]).toBeDefined();
           expect(data[field]).toEqual(nginxMsg[field]);

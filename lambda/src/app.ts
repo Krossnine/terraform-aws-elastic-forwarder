@@ -104,12 +104,13 @@ export const decodeLogsEventData = (buff: Buffer): CloudWatchLogsDecodedData => 
 export const parseMessageObj = (message: string): Record<string, unknown> | undefined => {
   try {
     // Quick and dirty check if message seems to be a JSON object
-    return message.startsWith('{') && message.endsWith('}')
-      ? parseAndFilterMessageFields(message)
+    const trimedMsg = message.trim();
+    return trimedMsg.startsWith('{') && trimedMsg.endsWith('}')
+      ? parseAndFilterMessageFields(trimedMsg)
       : undefined;
   } catch (err) {
     logger.error(err, Log.PARSE_MESSAGE_ERROR);
-    throw err;
+    return undefined;
   }
 };
 
@@ -163,6 +164,7 @@ export const transform = (logs: CloudWatchLogsDecodedData): string => {
 
   logEvents.forEach((logEvent) => {
     const message = parseMessageObj(logEvent.message) ?? logEvent.message;
+
     const action = {
       index: {
         _index: ELASTIC_SEARCH_INDEX,
@@ -172,7 +174,7 @@ export const transform = (logs: CloudWatchLogsDecodedData): string => {
     };
     const data = {
       '@id': logEvent.id,
-      '@timestamp': logEvent.timestamp,
+      '@timestamp': new Date(logEvent.timestamp).toISOString(),
       '@log_group': logs.logGroup,
       '@log_stream': logs.logStream,
       '@message_type': logs.messageType,
