@@ -330,6 +330,20 @@ resource "aws_cloudwatch_dashboard" "log_forwarder" {
           "title" : "Max Billed Duration [5m]",
           "view" : "timeSeries"
         }
+      },
+      {
+        "type" : "log",
+        "x" : 0,
+        "y" : 23,
+        "width" : 24,
+        "height" : 6,
+        "properties" : {
+          "query" : "SOURCE '/aws/lambda/${var.log_forwarder_lambda_function_name}' | filter level >= 30\n| stats count(err.code) as ec by err.code\n| display level, err.code, ec",
+          "region" : var.log_forwarder_lambda_region,
+          "stacked" : false,
+          "view" : "table",
+          "title" : "Errored requests"
+        }
       }
     ]
   })
