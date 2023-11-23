@@ -14,7 +14,7 @@ jobs:
     runs-on: ubuntu-latest
     services:
       setup-localstack-service:
-        image: localstack/localstack
+        image: localstack/localstack:2.1.0
         ports:
           - "127.0.0.1:4566:4566"            # LocalStack Gateway
           - "127.0.0.1:4510-4559:4510-4559"  # ext services port range
