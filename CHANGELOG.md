@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.5](https://github.com/Krossnine/terraform-aws-elastic-forwarder/compare/v0.0.4...v0.0.5) (2023-12-05)
+
+
+### 🚀 Features
+
+* **dashboard:** add error log table widget ([#55](https://github.com/Krossnine/terraform-aws-elastic-forwarder/issues/55)) ([2eb5f7d](https://github.com/Krossnine/terraform-aws-elastic-forwarder/commit/2eb5f7de47a935bb4679da4bad6d2263ce45ebb9))
+
 ### [0.0.3](https://github.com/Krossnine/terraform-aws-elastic-forwarder/compare/v0.0.1...v0.0.3) (2023-06-15)
 
 
