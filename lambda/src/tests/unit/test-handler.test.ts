@@ -92,6 +92,12 @@ describe('Lambda', () => {
     });
   });
 
+  describe('Log error mapping', () => {
+    it('should match the snapshot', () => {
+      expect(Log).toMatchSnapshot();
+    });
+  });
+
   describe('getEnv', () => {
     describe('when env is valid', () => {
       it('should return env with casting', () => {
@@ -355,6 +361,11 @@ describe('Lambda', () => {
         'a.b.c.d.e': 42,
         'a.b.c.d.f.g': 'In code we Rust',
       });
+    });
+
+    it('should return an empty object', () => {
+      const obj = {};
+      expect(deepFlatObject(obj)).toEqual({});
     });
   });
 
