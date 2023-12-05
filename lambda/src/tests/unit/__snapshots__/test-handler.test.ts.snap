@@ -1,0 +1,14 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Lambda Log error mapping should match the snapshot 1`] = `
+{
+  "ELK_ERROR": "internal ELK error",
+  "HANDLER_ERROR": "log forwarding error",
+  "HANDLER_SUCCEED": "log forwarding succeed",
+  "PARSE_EVENT_DATA_ERROR": "parse event data error",
+  "PARSE_MESSAGE_ERROR": "parse message error",
+  "REQUEST_RETRY": "retrying request",
+  "UNCOMPRESS_ERROR": "uncompress error",
+  "UNEXPECTED_ERROR": "unexpected error",
+}
+`;

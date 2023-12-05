@@ -110,7 +110,6 @@ No modules.
 | Name | Type |
 |------|------|
 | [aws_cloudwatch_dashboard.log_forwarder](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/cloudwatch_dashboard) | resource |
-| [aws_cloudwatch_log_group.forwarder_log_group](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/cloudwatch_log_group) | resource |
 | [aws_cloudwatch_log_subscription_filter.log_forwarder](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/cloudwatch_log_subscription_filter) | resource |
 | [aws_iam_role.lambda_task_execution_role](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role) | resource |
 | [aws_iam_role_policy_attachment.lambda_task_execution_role](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role_policy_attachment) | resource |
@@ -139,7 +138,6 @@ No modules.
 | <a name="input_log_forwarder_lambda_memory_size"></a> [log\_forwarder\_lambda\_memory\_size](#input\_log\_forwarder\_lambda\_memory\_size) | The amount of memory the lambda function will be allocated (in MB) | `number` | `128` | no |
 | <a name="input_log_forwarder_lambda_region"></a> [log\_forwarder\_lambda\_region](#input\_log\_forwarder\_lambda\_region) | The region where the lambda function will be deployed | `string` | n/a | yes |
 | <a name="input_log_forwarder_lambda_ttl"></a> [log\_forwarder\_lambda\_ttl](#input\_log\_forwarder\_lambda\_ttl) | The maximum amount of time the lambda function will be allowed to run (in seconds).<br>    Be aware that this is not the request time limit for the ELK request.<br>    Your need to orchestrate each of this variables accordingly :<br>      - log\_forwarder\_lambda\_ttl<br>      - elastic\_request\_timeout\_ms<br>      - elastic\_search\_retry\_count<br><br>    You can use the following formula to calculate the lambda timeout :<br>      log\_forwarder\_lambda\_ttl = (elastic\_request\_timeout\_ms / 1000) * (elastic\_search\_retry\_count + 1) + 1<br>    Where :<br>      - elastic\_request\_timeout\_ms is the request timeout in milliseconds<br>      - elastic\_search\_retry\_count is the number of retry plus the initial request<br><br>    Do not forget to add a gap to the lambda ttl for the cold start and to the elastic\_search\_retry\_count for the initial request. | `number` | `13` | no |
-| <a name="input_log_retention_in_days"></a> [log\_retention\_in\_days](#input\_log\_retention\_in\_days) | Lambda log retention in days | `number` | `30` | no |
 
 ## Outputs
 
@@ -150,6 +148,5 @@ No modules.
 | <a name="output_lambda_execution_role"></a> [lambda\_execution\_role](#output\_lambda\_execution\_role) | The ARN of the lambda execution role |
 | <a name="output_lambda_function"></a> [lambda\_function](#output\_lambda\_function) | The ARN of the Lambda function that forwards logs to CloudWatch |
 | <a name="output_lambda_function_role"></a> [lambda\_function\_role](#output\_lambda\_function\_role) | The ARN of the lambda IAM task execution role |
-| <a name="output_lambda_log_group"></a> [lambda\_log\_group](#output\_lambda\_log\_group) | The ARN of the Lambda log group |
 | <a name="output_log_subscription_permission"></a> [log\_subscription\_permission](#output\_log\_subscription\_permission) | The info of the invocation permission |
 <!-- END_TF_DOCS -->
