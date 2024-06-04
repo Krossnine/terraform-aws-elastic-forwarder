@@ -63,6 +63,7 @@ jobs:
 
     - name: Add artifacts
       run: |
+        sudo chmod -R ugo+rwX .
         git add -A
 
     - name: Bump module version
@@ -71,6 +72,7 @@ jobs:
 
     - name: Add artifacts
       run: |
+        sudo chmod -R ugo+rwX .
         git add -A
 
     - name: Add & Push changes & tag
