@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.6](https://github.com/Krossnine/terraform-aws-elastic-forwarder/compare/v0.0.5...v0.0.6) (2024-06-04)
+
+
+### 🏗  Chore
+
+* **project:** do chmod before save object with git in bump and build workflow ([5b540ec](https://github.com/Krossnine/terraform-aws-elastic-forwarder/commit/5b540ec31f851ef7730547e6adf06466d27e0359))
+* **project:** explicit permissions to bump and build workflow ([53befed](https://github.com/Krossnine/terraform-aws-elastic-forwarder/commit/53befeddd6116e777477987b2a4320a822f3bc75))
+* **providers:** update hcp/aws provider from ~4 to >= 5.32.0 ([#56](https://github.com/Krossnine/terraform-aws-elastic-forwarder/issues/56)) ([0c7d50c](https://github.com/Krossnine/terraform-aws-elastic-forwarder/commit/0c7d50cedbdb92fe11619d0c5c8ecdb04e148247))
+
 ### [0.0.5](https://github.com/Krossnine/terraform-aws-elastic-forwarder/compare/v0.0.4...v0.0.5) (2023-12-05)
 
 
