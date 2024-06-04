@@ -26,6 +26,7 @@ jobs:
       repository-projects: read
       security-events: write
       statuses: read
+      attestations: write
     name: Test Terraform
     uses: ./.github/workflows/test-tf.yml
 
@@ -44,6 +45,7 @@ jobs:
       repository-projects: read
       security-events: write
       statuses: read
+      attestations: write
     name: Test Lambda
     uses: ./.github/workflows/test-lambda.yml
 
@@ -62,4 +64,5 @@ jobs:
       repository-projects: read
       security-events: write
       statuses: read
+      attestations: write
     uses: ./.github/workflows/integration-test.yml
