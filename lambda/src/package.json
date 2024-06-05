@@ -1,6 +1,6 @@
 {
   "name": "log_forwarder",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "AWS CloudWatch logs forwarder lambda function for terraform-aws-elastic-forwarder",
   "main": "app.js",
   "repository": "https://github.com/Krossnine/terraform-aws-elastic-forwarder",
